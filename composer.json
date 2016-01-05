@@ -1,5 +1,5 @@
 {
-    "name": "leaseweb/memcache-bundle",
+    "name": "elcweb/memcached-bundle",
     "type": "symfony-bundle",
     "description": "Memcache Doctrine caching and session storage in the Web Debug Toolbar",
     "keywords": ["memcache","memcached","cache","session"],
@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.3.2",
-        "symfony/framework-bundle": ">=2.1",
+        "symfony/framework-bundle": "^2.1",
         "ext-memcached": ">=1.0"
     },
     "require-dev": {
@@ -25,7 +25,10 @@
     "target-dir": "Lsw/MemcacheBundle",
     "extra": {
         "branch-alias": {
-            "dev-master": "1.1.x-dev"
+            "dev-master": "1.2.x-dev"
         }
+    },
+    "replace": {
+        "lsw/memcache-bundle": "Handle memcached 2.2"
     }
 }
