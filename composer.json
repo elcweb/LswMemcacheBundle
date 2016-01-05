@@ -30,5 +30,10 @@
     },
     "replace": {
         "lsw/memcache-bundle": "*"
+    },
+    "conflict": {
+        "lsw/memcache-bundle": "*",
+        "ingenki/memcached-bundle": "*",
+        "hanikesn/memcached-bundle": "*"
     }
 }
