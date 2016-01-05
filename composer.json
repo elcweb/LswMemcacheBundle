@@ -29,6 +29,6 @@
         }
     },
     "replace": {
-        "lsw/memcache-bundle": "Handle memcached 2.2"
+        "lsw/memcache-bundle": "*"
     }
 }
