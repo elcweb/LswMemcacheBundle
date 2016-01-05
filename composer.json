@@ -29,7 +29,7 @@
         }
     },
     "replace": {
-        "lsw/memcache-bundle": "*"
+        "lsw/memcache-bundle": "*",
         "leaseweb/memcache-bundle": "*"
     },
     "conflict": {
