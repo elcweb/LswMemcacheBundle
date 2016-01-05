@@ -1355,7 +1355,7 @@ if ($extension->getVersion()=='1.0.2') {
         }
     }
 } else if ($extension->getVersion()=='2.2.0') {
-    class LoggingMemcache extends \Memcached implements MemcacheInterface, LoggingMemcacheInterface {
+    class LoggingMemcache implements MemcacheInterface, LoggingMemcacheInterface {
         public function __construct($logging, $persistent_id = '') {
             $this->calls = array();
             $this->logging = $logging;
@@ -1364,7 +1364,7 @@ if ($extension->getVersion()=='1.0.2') {
             } else {
                 $this->initialize = true;
             }
-            parent::__construct($persistent_id);
+            $this->memcached = new \Memcached($persistent_id);
         }
         private $calls;
         private $initialize;
@@ -1378,521 +1378,521 @@ if ($extension->getVersion()=='1.0.2') {
             return $result;
         }
         public function get( $key, $cache_cb = null, &$cas_token = null, &$udf_flags = null ) {
-            if (!$this->logging) return parent::get($key,$cache_cb,$cas_token,$udf_flags);
+            if (!$this->logging) return $this->memcached->get($key,$cache_cb,$cas_token,$udf_flags);
             $start = microtime(true);
             $name = 'get';
             $arguments = array($key,$cache_cb,$cas_token,$udf_flags);
-            $result = parent::get($key,$cache_cb,$cas_token,$udf_flags);
+            $result = $this->memcached->get($key,$cache_cb,$cas_token,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getByKey( $server_key, $key, $cache_cb = null, &$cas_token = null, &$udf_flags = null ) {
-            if (!$this->logging) return parent::getByKey($server_key,$key,$cache_cb,$cas_token,$udf_flags);
+            if (!$this->logging) return $this->memcached->getByKey($server_key,$key,$cache_cb,$cas_token,$udf_flags);
             $start = microtime(true);
             $name = 'getByKey';
             $arguments = array($server_key,$key,$cache_cb,$cas_token,$udf_flags);
-            $result = parent::getByKey($server_key,$key,$cache_cb,$cas_token,$udf_flags);
+            $result = $this->memcached->getByKey($server_key,$key,$cache_cb,$cas_token,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getMulti( array $keys, &$cas_tokens = null, $flags = null, &$udf_flags = null ) {
-            if (!$this->logging) return parent::getMulti($keys,$cas_tokens,$flags,$udf_flags);
+            if (!$this->logging) return $this->memcached->getMulti($keys,$cas_tokens,$flags,$udf_flags);
             $start = microtime(true);
             $name = 'getMulti';
             $arguments = array($keys,$cas_tokens,$flags,$udf_flags);
-            $result = parent::getMulti($keys,$cas_tokens,$flags,$udf_flags);
+            $result = $this->memcached->getMulti($keys,$cas_tokens,$flags,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getMultiByKey( $server_key, array $keys, &$cas_tokens = null, $flags = null, &$udf_flags = null ) {
-            if (!$this->logging) return parent::getMultiByKey($server_key,$keys,$cas_tokens,$flags,$udf_flags);
+            if (!$this->logging) return $this->memcached->getMultiByKey($server_key,$keys,$cas_tokens,$flags,$udf_flags);
             $start = microtime(true);
             $name = 'getMultiByKey';
             $arguments = array($server_key,$keys,$cas_tokens,$flags,$udf_flags);
-            $result = parent::getMultiByKey($server_key,$keys,$cas_tokens,$flags,$udf_flags);
+            $result = $this->memcached->getMultiByKey($server_key,$keys,$cas_tokens,$flags,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getDelayed( array $keys, $with_cas = null, $value_cb = null ) {
-            if (!$this->logging) return parent::getDelayed($keys,$with_cas,$value_cb);
+            if (!$this->logging) return $this->memcached->getDelayed($keys,$with_cas,$value_cb);
             $start = microtime(true);
             $name = 'getDelayed';
             $arguments = array($keys,$with_cas,$value_cb);
-            $result = parent::getDelayed($keys,$with_cas,$value_cb);
+            $result = $this->memcached->getDelayed($keys,$with_cas,$value_cb);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getDelayedByKey( $server_key, array $keys, $with_cas = null, $value_cb = null ) {
-            if (!$this->logging) return parent::getDelayedByKey($server_key,$keys,$with_cas,$value_cb);
+            if (!$this->logging) return $this->memcached->getDelayedByKey($server_key,$keys,$with_cas,$value_cb);
             $start = microtime(true);
             $name = 'getDelayedByKey';
             $arguments = array($server_key,$keys,$with_cas,$value_cb);
-            $result = parent::getDelayedByKey($server_key,$keys,$with_cas,$value_cb);
+            $result = $this->memcached->getDelayedByKey($server_key,$keys,$with_cas,$value_cb);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function fetch( ) {
-            if (!$this->logging) return parent::fetch();
+            if (!$this->logging) return $this->memcached->fetch();
             $start = microtime(true);
             $name = 'fetch';
             $arguments = array();
-            $result = parent::fetch();
+            $result = $this->memcached->fetch();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function fetchAll( ) {
-            if (!$this->logging) return parent::fetchAll();
+            if (!$this->logging) return $this->memcached->fetchAll();
             $start = microtime(true);
             $name = 'fetchAll';
             $arguments = array();
-            $result = parent::fetchAll();
+            $result = $this->memcached->fetchAll();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function set( $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::set($key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->set($key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'set';
             $arguments = array($key,$value,$expiration,$udf_flags);
-            $result = parent::set($key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->set($key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function touch( $key, $expiration = 0 ) {
-            if (!$this->logging) return parent::touch($key,$expiration);
+            if (!$this->logging) return $this->memcached->touch($key,$expiration);
             $start = microtime(true);
             $name = 'touch';
             $arguments = array($key,$expiration);
-            $result = parent::touch($key,$expiration);
+            $result = $this->memcached->touch($key,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function touchbyKey( $server_key, $key, $expiration = 0 ) {
-            if (!$this->logging) return parent::touchbyKey($server_key,$key,$expiration);
+            if (!$this->logging) return $this->memcached->touchbyKey($server_key,$key,$expiration);
             $start = microtime(true);
             $name = 'touchbyKey';
             $arguments = array($server_key,$key,$expiration);
-            $result = parent::touchbyKey($server_key,$key,$expiration);
+            $result = $this->memcached->touchbyKey($server_key,$key,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setByKey( $server_key, $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::setByKey($server_key,$key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->setByKey($server_key,$key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'setByKey';
             $arguments = array($server_key,$key,$value,$expiration,$udf_flags);
-            $result = parent::setByKey($server_key,$key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->setByKey($server_key,$key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setMulti( array $items, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::setMulti($items,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->setMulti($items,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'setMulti';
             $arguments = array($items,$expiration,$udf_flags);
-            $result = parent::setMulti($items,$expiration,$udf_flags);
+            $result = $this->memcached->setMulti($items,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setMultiByKey( $server_key, array $items, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::setMultiByKey($server_key,$items,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->setMultiByKey($server_key,$items,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'setMultiByKey';
             $arguments = array($server_key,$items,$expiration,$udf_flags);
-            $result = parent::setMultiByKey($server_key,$items,$expiration,$udf_flags);
+            $result = $this->memcached->setMultiByKey($server_key,$items,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function cas( $token, $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::cas($token,$key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->cas($token,$key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'cas';
             $arguments = array($token,$key,$value,$expiration,$udf_flags);
-            $result = parent::cas($token,$key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->cas($token,$key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function casByKey( $token, $server_key, $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::casByKey($token,$server_key,$key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->casByKey($token,$server_key,$key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'casByKey';
             $arguments = array($token,$server_key,$key,$value,$expiration,$udf_flags);
-            $result = parent::casByKey($token,$server_key,$key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->casByKey($token,$server_key,$key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function add( $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::add($key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->add($key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'add';
             $arguments = array($key,$value,$expiration,$udf_flags);
-            $result = parent::add($key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->add($key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function addByKey( $server_key, $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::addByKey($server_key,$key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->addByKey($server_key,$key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'addByKey';
             $arguments = array($server_key,$key,$value,$expiration,$udf_flags);
-            $result = parent::addByKey($server_key,$key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->addByKey($server_key,$key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function append( $key, $value, $expiration = 0 ) {
-            if (!$this->logging) return parent::append($key,$value,$expiration);
+            if (!$this->logging) return $this->memcached->append($key,$value,$expiration);
             $start = microtime(true);
             $name = 'append';
             $arguments = array($key,$value,$expiration);
-            $result = parent::append($key,$value,$expiration);
+            $result = $this->memcached->append($key,$value,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function appendByKey( $server_key, $key, $value, $expiration = 0 ) {
-            if (!$this->logging) return parent::appendByKey($server_key,$key,$value,$expiration);
+            if (!$this->logging) return $this->memcached->appendByKey($server_key,$key,$value,$expiration);
             $start = microtime(true);
             $name = 'appendByKey';
             $arguments = array($server_key,$key,$value,$expiration);
-            $result = parent::appendByKey($server_key,$key,$value,$expiration);
+            $result = $this->memcached->appendByKey($server_key,$key,$value,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function prepend( $key, $value, $expiration = 0 ) {
-            if (!$this->logging) return parent::prepend($key,$value,$expiration);
+            if (!$this->logging) return $this->memcached->prepend($key,$value,$expiration);
             $start = microtime(true);
             $name = 'prepend';
             $arguments = array($key,$value,$expiration);
-            $result = parent::prepend($key,$value,$expiration);
+            $result = $this->memcached->prepend($key,$value,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function prependByKey( $server_key, $key, $value, $expiration = 0 ) {
-            if (!$this->logging) return parent::prependByKey($server_key,$key,$value,$expiration);
+            if (!$this->logging) return $this->memcached->prependByKey($server_key,$key,$value,$expiration);
             $start = microtime(true);
             $name = 'prependByKey';
             $arguments = array($server_key,$key,$value,$expiration);
-            $result = parent::prependByKey($server_key,$key,$value,$expiration);
+            $result = $this->memcached->prependByKey($server_key,$key,$value,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function replace( $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::replace($key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->replace($key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'replace';
             $arguments = array($key,$value,$expiration,$udf_flags);
-            $result = parent::replace($key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->replace($key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function replaceByKey( $server_key, $key, $value, $expiration = 0, $udf_flags = 0 ) {
-            if (!$this->logging) return parent::replaceByKey($server_key,$key,$value,$expiration,$udf_flags);
+            if (!$this->logging) return $this->memcached->replaceByKey($server_key,$key,$value,$expiration,$udf_flags);
             $start = microtime(true);
             $name = 'replaceByKey';
             $arguments = array($server_key,$key,$value,$expiration,$udf_flags);
-            $result = parent::replaceByKey($server_key,$key,$value,$expiration,$udf_flags);
+            $result = $this->memcached->replaceByKey($server_key,$key,$value,$expiration,$udf_flags);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function delete( $key, $time = 0 ) {
-            if (!$this->logging) return parent::delete($key,$time);
+            if (!$this->logging) return $this->memcached->delete($key,$time);
             $start = microtime(true);
             $name = 'delete';
             $arguments = array($key,$time);
-            $result = parent::delete($key,$time);
+            $result = $this->memcached->delete($key,$time);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function deleteByKey( $server_key, $key, $time = 0 ) {
-            if (!$this->logging) return parent::deleteByKey($server_key,$key,$time);
+            if (!$this->logging) return $this->memcached->deleteByKey($server_key,$key,$time);
             $start = microtime(true);
             $name = 'deleteByKey';
             $arguments = array($server_key,$key,$time);
-            $result = parent::deleteByKey($server_key,$key,$time);
+            $result = $this->memcached->deleteByKey($server_key,$key,$time);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function deleteMulti( $keys, $expiration = 0 ) {
-            if (!$this->logging) return parent::deleteMulti($keys,$expiration);
+            if (!$this->logging) return $this->memcached->deleteMulti($keys,$expiration);
             $start = microtime(true);
             $name = 'deleteMulti';
             $arguments = array($keys,$expiration);
-            $result = parent::deleteMulti($keys,$expiration);
+            $result = $this->memcached->deleteMulti($keys,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function deleteMultiByKey( $server_key, $keys, $expiration = 0 ) {
-            if (!$this->logging) return parent::deleteMultiByKey($server_key,$keys,$expiration);
+            if (!$this->logging) return $this->memcached->deleteMultiByKey($server_key,$keys,$expiration);
             $start = microtime(true);
             $name = 'deleteMultiByKey';
             $arguments = array($server_key,$keys,$expiration);
-            $result = parent::deleteMultiByKey($server_key,$keys,$expiration);
+            $result = $this->memcached->deleteMultiByKey($server_key,$keys,$expiration);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function increment( $key, $offset = 1, $initial_value = 0, $expiry = 0) {
-            if (!$this->logging) return parent::increment($key,$offset,$initial_value,$expiry);
+            if (!$this->logging) return $this->memcached->increment($key,$offset,$initial_value,$expiry);
             $start = microtime(true);
             $name = 'increment';
             $arguments = array($key,$offset,$initial_value,$expiry);
-            $result = parent::increment($key,$offset,$initial_value,$expiry);
+            $result = $this->memcached->increment($key,$offset,$initial_value,$expiry);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function incrementByKey( $server_key, $key, $offset = 1, $initial_value = 0, $expiry = 0 ) {
-            if (!$this->logging) return parent::incrementByKey($server_key,$key,$offset,$initial_value,$expiry);
+            if (!$this->logging) return $this->memcached->incrementByKey($server_key,$key,$offset,$initial_value,$expiry);
             $start = microtime(true);
             $name = 'incrementByKey';
             $arguments = array($server_key,$key,$offset,$initial_value,$expiry);
-            $result = parent::incrementByKey($server_key,$key,$offset,$initial_value,$expiry);
+            $result = $this->memcached->incrementByKey($server_key,$key,$offset,$initial_value,$expiry);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function decrement( $key, $offset = 1, $initial_value = 0, $expiry = 0) {
-            if (!$this->logging) return parent::decrement($key,$offset,$initial_value,$expiry);
+            if (!$this->logging) return $this->memcached->decrement($key,$offset,$initial_value,$expiry);
             $start = microtime(true);
             $name = 'decrement';
             $arguments = array($key,$offset,$initial_value,$expiry);
-            $result = parent::decrement($key,$offset,$initial_value,$expiry);
+            $result = $this->memcached->decrement($key,$offset,$initial_value,$expiry);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function decrementByKey( $server_key, $key, $offset = 1, $initial_value = 0, $expiry = 0 ) {
-            if (!$this->logging) return parent::decrementByKey($server_key,$key,$offset,$initial_value,$expiry);
+            if (!$this->logging) return $this->memcached->decrementByKey($server_key,$key,$offset,$initial_value,$expiry);
             $start = microtime(true);
             $name = 'decrementByKey';
             $arguments = array($server_key,$key,$offset,$initial_value,$expiry);
-            $result = parent::decrementByKey($server_key,$key,$offset,$initial_value,$expiry);
+            $result = $this->memcached->decrementByKey($server_key,$key,$offset,$initial_value,$expiry);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getOption( $option ) {
-            if (!$this->logging) return parent::getOption($option);
+            if (!$this->logging) return $this->memcached->getOption($option);
             $start = microtime(true);
             $name = 'getOption';
             $arguments = array($option);
-            $result = parent::getOption($option);
+            $result = $this->memcached->getOption($option);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setOption( $option, $value ) {
-            if (!$this->logging) return parent::setOption($option,$value);
+            if (!$this->logging) return $this->memcached->setOption($option,$value);
             $start = microtime(true);
             $name = 'setOption';
             $arguments = array($option,$value);
-            $result = parent::setOption($option,$value);
+            $result = $this->memcached->setOption($option,$value);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setOptions( $options ) {
-            if (!$this->logging) return parent::setOptions($options);
+            if (!$this->logging) return $this->memcached->setOptions($options);
             $start = microtime(true);
             $name = 'setOptions';
             $arguments = array($options);
-            $result = parent::setOptions($options);
+            $result = $this->memcached->setOptions($options);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setBucket( $host_map, $forward_map, $replicas ) {
-            if (!$this->logging) return parent::setBucket($host_map,$forward_map,$replicas);
+            if (!$this->logging) return $this->memcached->setBucket($host_map,$forward_map,$replicas);
             $start = microtime(true);
             $name = 'setBucket';
             $arguments = array($host_map,$forward_map,$replicas);
-            $result = parent::setBucket($host_map,$forward_map,$replicas);
+            $result = $this->memcached->setBucket($host_map,$forward_map,$replicas);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function addServer( $host, $port,  $weight = 0 ) {
-            if (!$this->logging) return parent::addServer($host,$port,$weight);
+            if (!$this->logging) return $this->memcached->addServer($host,$port,$weight);
             $start = microtime(true);
             $name = 'addServer';
             $arguments = array($host,$port,$weight);
-            $result = parent::addServer($host,$port,$weight);
+            $result = $this->memcached->addServer($host,$port,$weight);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function addServers( array $servers ) {
-            if (!$this->logging) return parent::addServers($servers);
+            if (!$this->logging) return $this->memcached->addServers($servers);
             $start = microtime(true);
             $name = 'addServers';
             $arguments = array($servers);
-            $result = parent::addServers($servers);
+            $result = $this->memcached->addServers($servers);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getServerList( ) {
-            if (!$this->logging) return parent::getServerList();
+            if (!$this->logging) return $this->memcached->getServerList();
             $start = microtime(true);
             $name = 'getServerList';
             $arguments = array();
-            $result = parent::getServerList();
+            $result = $this->memcached->getServerList();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getServerByKey( $server_key ) {
-            if (!$this->logging) return parent::getServerByKey($server_key);
+            if (!$this->logging) return $this->memcached->getServerByKey($server_key);
             $start = microtime(true);
             $name = 'getServerByKey';
             $arguments = array($server_key);
-            $result = parent::getServerByKey($server_key);
+            $result = $this->memcached->getServerByKey($server_key);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getLastErrorMessage( ) {
-            if (!$this->logging) return parent::getLastErrorMessage();
+            if (!$this->logging) return $this->memcached->getLastErrorMessage();
             $start = microtime(true);
             $name = 'getLastErrorMessage';
             $arguments = array();
-            $result = parent::getLastErrorMessage();
+            $result = $this->memcached->getLastErrorMessage();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getLastErrorCode( ) {
-            if (!$this->logging) return parent::getLastErrorCode();
+            if (!$this->logging) return $this->memcached->getLastErrorCode();
             $start = microtime(true);
             $name = 'getLastErrorCode';
             $arguments = array();
-            $result = parent::getLastErrorCode();
+            $result = $this->memcached->getLastErrorCode();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getLastErrorErrno( ) {
-            if (!$this->logging) return parent::getLastErrorErrno();
+            if (!$this->logging) return $this->memcached->getLastErrorErrno();
             $start = microtime(true);
             $name = 'getLastErrorErrno';
             $arguments = array();
-            $result = parent::getLastErrorErrno();
+            $result = $this->memcached->getLastErrorErrno();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getLastDisconnectedServer( ) {
-            if (!$this->logging) return parent::getLastDisconnectedServer();
+            if (!$this->logging) return $this->memcached->getLastDisconnectedServer();
             $start = microtime(true);
             $name = 'getLastDisconnectedServer';
             $arguments = array();
-            $result = parent::getLastDisconnectedServer();
+            $result = $this->memcached->getLastDisconnectedServer();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function flush( $delay = 0 ) {
-            if (!$this->logging) return parent::flush($delay);
+            if (!$this->logging) return $this->memcached->flush($delay);
             $start = microtime(true);
             $name = 'flush';
             $arguments = array($delay);
-            $result = parent::flush($delay);
+            $result = $this->memcached->flush($delay);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getStats( ) {
-            if (!$this->logging) return parent::getStats();
+            if (!$this->logging) return $this->memcached->getStats();
             $start = microtime(true);
             $name = 'getStats';
             $arguments = array();
-            $result = parent::getStats();
+            $result = $this->memcached->getStats();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getVersion( ) {
-            if (!$this->logging) return parent::getVersion();
+            if (!$this->logging) return $this->memcached->getVersion();
             $start = microtime(true);
             $name = 'getVersion';
             $arguments = array();
-            $result = parent::getVersion();
+            $result = $this->memcached->getVersion();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getResultCode( ) {
-            if (!$this->logging) return parent::getResultCode();
+            if (!$this->logging) return $this->memcached->getResultCode();
             $start = microtime(true);
             $name = 'getResultCode';
             $arguments = array();
-            $result = parent::getResultCode();
+            $result = $this->memcached->getResultCode();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function getResultMessage( ) {
-            if (!$this->logging) return parent::getResultMessage();
+            if (!$this->logging) return $this->memcached->getResultMessage();
             $start = microtime(true);
             $name = 'getResultMessage';
             $arguments = array();
-            $result = parent::getResultMessage();
+            $result = $this->memcached->getResultMessage();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function isPersistent( ) {
-            if (!$this->logging) return parent::isPersistent();
+            if (!$this->logging) return $this->memcached->isPersistent();
             $start = microtime(true);
             $name = 'isPersistent';
             $arguments = array();
-            $result = parent::isPersistent();
+            $result = $this->memcached->isPersistent();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function isPristine( ) {
-            if (!$this->logging) return parent::isPristine();
+            if (!$this->logging) return $this->memcached->isPristine();
             $start = microtime(true);
             $name = 'isPristine';
             $arguments = array();
-            $result = parent::isPristine();
+            $result = $this->memcached->isPristine();
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
         }
         public function setSaslAuthData( $username, $password ) {
-            if (!$this->logging) return parent::setSaslAuthData($username,$password);
+            if (!$this->logging) return $this->memcached->setSaslAuthData($username,$password);
             $start = microtime(true);
             $name = 'setSaslAuthData';
             $arguments = array($username,$password);
-            $result = parent::setSaslAuthData($username,$password);
+            $result = $this->memcached->setSaslAuthData($username,$password);
             $time = microtime(true) - $start;
             $this->calls[] = (object) compact('start', 'time', 'name', 'arguments', 'result');
             return $result;
