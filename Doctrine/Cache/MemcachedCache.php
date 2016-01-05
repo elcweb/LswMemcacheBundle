@@ -1,7 +1,7 @@
 <?php
 namespace Lsw\MemcacheBundle\Doctrine\Cache;
 
-use \Memcached;
+use Lsw\MemcacheBundle\Cache\MemcacheInterface;
 
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
@@ -25,9 +25,9 @@ class MemcachedCache extends CacheProvider
     /**
      * Sets the memcached instance to use.
      *
-     * @param Memcached $memcached
+     * @param MemcacheInterface $memcached
      */
-    public function setMemcached(Memcached $memcached)
+    public function setMemcached(MemcacheInterface $memcached)
     {
         $this->memcached = $memcached;
     }
@@ -35,7 +35,7 @@ class MemcachedCache extends CacheProvider
     /**
      * Gets the memcached instance used by the cache.
      *
-     * @return Memcached
+     * @return MemcacheInterface
      */
     public function getMemcached()
     {
