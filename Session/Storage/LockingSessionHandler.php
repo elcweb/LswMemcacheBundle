@@ -1,6 +1,8 @@
 <?php
 namespace Lsw\MemcacheBundle\Session\Storage;
 
+use Lsw\MemcacheBundle\Cache\MemcacheInterface;
+
 /**
  * LockingSessionHandler.
  *
@@ -66,12 +68,12 @@ class LockingSessionHandler implements \SessionHandlerInterface
      *  * prefix: The prefix to use for the memcached keys in order to avoid collision
      *  * expiretime: The time to live in seconds
      *
-     * @param \Memcached $memcached A \Memcached instance
+     * @param MemcachedInterface $memcached A MemcachedInterface instance
      * @param array      $options   An associative array of Memcached options
      *
      * @throws \InvalidArgumentException When unsupported options are passed
      */
-    public function __construct(\Memcached $memcached, array $options = array())
+    public function __construct(MemcacheInterface $memcached, array $options = array())
     {
         $this->memcached = $memcached;
 
