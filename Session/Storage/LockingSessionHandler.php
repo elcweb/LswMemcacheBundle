@@ -68,7 +68,7 @@ class LockingSessionHandler implements \SessionHandlerInterface
      *  * prefix: The prefix to use for the memcached keys in order to avoid collision
      *  * expiretime: The time to live in seconds
      *
-     * @param MemcachedInterface $memcached A MemcachedInterface instance
+     * @param MemcacheInterface $memcached A MemcachedInterface instance
      * @param array      $options   An associative array of Memcached options
      *
      * @throws \InvalidArgumentException When unsupported options are passed
