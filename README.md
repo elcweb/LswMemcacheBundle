@@ -1,5 +1,7 @@
 LswMemcacheBundle
 =================
+[![Latest Stable Version](https://poser.pugx.org/elcweb/memcached-bundle/v/stable.png)](https://packagist.org/packages/elcweb/memcached-bundle)
+[![Total Downloads](https://poser.pugx.org/elcweb/memcached-bundle/downloads.png)](https://packagist.org/packages/elcweb/memcached-bundle)
 [![Build Status](https://travis-ci.org/LeaseWeb/LswMemcacheBundle.svg)](https://travis-ci.org/LeaseWeb/LswMemcacheBundle)
 
 ![screenshot](http://www.leaseweblabs.com/wp-content/uploads/2013/03/memcache_debug.png)
